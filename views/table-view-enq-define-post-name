@@ -1,0 +1,110 @@
+
+{% set enq = { post_type: 'show-around-enquiry', posts_per_page: -1, order: 'DESC' } %}
+    {% for school in user.school %}
+        <h1>{{ school.title }}</h1>
+            <p>Welcome {{ user.display_name }}</p>              
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Name</td>
+                            <td>School</td>
+                            <td>Visit Date</td>
+                            <td>Contacted</td>
+                            <td>Show Around</td>
+                            <td>Offer</td>
+                            <td>Welcome</td>
+                            <td>Waitlist</td>
+                            <td>Registered</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+{% set enquiry = mb.get_posts( enq ) %}
+    {% for post in enquiry %}
+        {% if post.school_name.title == 'Post Title' %} //** Define post title.. not pratical when adding more posts, ideal for solo page **\\
+                    <tbody>
+                        <tr>
+                            <td>{{ post.parent_first_name }} {{ post.parent_last_name }}</td>
+                            <td>{{ post.school_name.title }}</td>
+                            <td>{{ post.visit_date | date( 'd-m-Y' ) }}</td>
+                            <td class="status-box">
+                                {% for item in post.contacted %}
+                                    {% if item.value == 'contacted' %}
+                                        <span class="contacted-status-contacted-table">Contacted</span>
+                                            {% elseif item.value == 'attempted' %}
+                                                <span class="contacted-status-attempted-table">Attempted</span>
+                                            {% elseif item.value == 'todo' %}
+                                                <span class="contacted-status-todo-table">To Do</span>
+                                            {% endif %}
+                                    {% endfor %}
+                            </td>
+
+                            <td class="status-box">
+                                {% for item in post.showaround_progress %}
+                                    {% if item.value == 'booked' %}
+                                        <span class="contacted-status-booked-table">Booked</span>
+                                    {% elseif item.value == 'justaenquiry' %}
+                                        <span class="contacted-status-justaenquiry-table">Just a Enquiry</span>
+                                    {% elseif item.value == 'noshow' %}
+                                        <span class="contacted-status-noshow-table">No Show</span>
+                                    {% elseif item.value == 'rebooked' %}
+                                        <span class="contacted-status-rebooked-table">Rebooked</span>
+                                    {% elseif item.value == 'todo' %}
+                                        <span class="contacted-status-todo-table">To Do</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                                        
+                            <td class="status-box">
+                                {% for item in post.offer_accepted %}
+                                    {% if item.value == 'accepted' %}
+                                        <span class="contacted-status-accepted-table">Accepted</span>
+                                    {% elseif item.value == 'notaccepted' %}
+                                        <span class="contacted-status-notaccepted-table">Not Accepted</span>
+                                    {% elseif item.value == 'offered' %}
+                                        <span class="contacted-status-offered-table">Offered</span>
+                                    {% elseif item.value == 'sendoffer' %}
+                                        <span class="contacted-status-sendoffer-table">Send Offer</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+
+                            <td class="status-box">
+                                {% for item in post.welcome_email_sent %}
+                                        {% if item.value == 'sent' %}
+                                            <span class="contacted-status-sent-table">Sent</span>
+                                        {% elseif item.value == 'notsent' %}
+                                            <span class="contacted-status-notsent-table">Not Sent</span>
+                                        {% endif %}
+                                {% endfor %}
+                            </td>
+
+                            <td class="status-box">
+                                {% for item in post.child_waitlist %}
+                                    {% if item.value == 'undergoing' %}
+                                        <span class="waitlist-status-undergoing-table">Undergoing</span>
+                                    {% elseif item.value == 'attempted' %}
+                                        <span class="waitlist-status-onwaitlist-table">On Waitlist</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                                        
+                            <td class="status-box">
+                                {% for item in post.child_registered %}
+                                    {% if item.value == 'registered' %}
+                                        <span class="contacted-status-registered-table">Registered</span>
+                                    {% elseif item.value == 'notregistered' %}
+                                        <span class="contacted-status-notregistered-table">Not Registered</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+
+                            <td><a href="{{ site.url }}/showaround-enquiry-form/?rwmb_frontend_field_post_id={{ post.ID }}" class="table-link">Edit</a> | <a href="{{ post.url }}" class="table-link">View</a></td>
+                        
+                        </tr>
+                    </tbody>
+                    {% else %}  
+                <h3>There is Nothing to see Here Go back <a href="{{ site.url }}" class="table-link">Home</a></h3>  
+            {% endif %}
+        {% endfor %}
+    </table> 
+{% endfor %}
