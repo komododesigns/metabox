@@ -20,7 +20,7 @@
                     </thead>
                 {% set enquiry = mb.get_posts( args ) %}
                 {% for post in enquiry %}
-                {% if show-around-enquiry.school_name.title is same as (user.school.title) %}
+                {% if enquiry.school_name.title is same as (user.school.title) %}
                 
                     <tbody>
                         <tr>
