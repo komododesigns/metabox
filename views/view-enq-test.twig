@@ -1,3 +1,25 @@
+// This way filters ok
+
+{% for school in user.school %}
+        
+        <h1>{{ school.title }}Show Around Enquiry Dashboard</h1>
+            <p>Welcome {{ user.display_name }} to your Show Around Enquiries.</p>
+
+{% set enq = { post_type: 'show-around-enquiry', posts_per_page: -1, order: 'DESC' } %}
+    {% set enquiry = mb.get_posts( enq ) %}
+        {% for post in enquiry %}
+            {% if post.school_name.title == 'Post Title' %}
+                <p>{{ post.parent_first_name }} {{ post.parent_last_name }}</p>
+                <p>{{ post.school_name.title }}</p>
+                <p>{{ post.visit_date | date( 'd-m-Y' ) }}</p>
+        {% else %}  
+            <h3>There is Nothing to see Here Go back <a href="{{ site.url }}" class="table-link">Home</a></h3>   // Issue This still shows even if has a matching title
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+
+//no working
+
 {% for school in user.school %}
         
         <h1>{{ school.title }}Show Around Enquiry Dashboard</h1>
