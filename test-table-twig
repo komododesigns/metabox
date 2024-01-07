@@ -26,6 +26,22 @@ Throws website error {% set active_posts = posts|filter(post => post.contacted =
         {% endif %}
     {% endfor %}
 
+
+
+{% for post in enquiry %}
+        {% if post.school_name.title == school.title %}
+            {% for item in post.contacted %}
+                {% if item.value == 'contacted' %}
+                    <span class="status-green-table">Contacted: {{ item|length }}</span>
+                        {% elseif item.value == 'attempted' %}
+                            <span class="status-amber-table">Attempts: {{ item|length }}</span>
+                        {% elseif item.value == 'todo' %}
+                            <span class="status-red-table">To Do: {{ item|length }}</span>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+
             <h1>{{ school.title }} Show Around Enquiries</h1> 
                     
                     <div class="table-wrapper">
