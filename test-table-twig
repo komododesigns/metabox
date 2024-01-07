@@ -5,8 +5,7 @@ Does'nt work. {% set active_posts = posts|filter(post => post.contacted == 'cont
 
 
 {% set enq = { post_type: 'show-around-enquiry', posts_per_page: -1, order: 'DESC' } %}
-{% set active_posts = posts|filter(post => post.contacted == 'contacted' )|length %} {{ active_posts }}
-    {% for school in user.school_name %}
+{% for school in user.school_name %}
         <h1>{{ school.title }} Show Around Enquiries</h1>         
                 <div class="table-wrapper">
                 <table id="Userslist" class="enquiry-table">
@@ -32,8 +31,7 @@ Does'nt work. {% set active_posts = posts|filter(post => post.contacted == 'cont
                             <td class="enquiry-table-content">{{ post.parent_first_name }} {{ post.post_title }}</td>
                             <td class="enquiry-table-content">{{ post.school_name.title }}</td>
                             <td class="enquiry-table-content">{{ post.visit_date | date( 'd-m-Y' ) }}</td>
-                            <td class="status-box">
-                            {% if post.contacted == '1' %}    
+                            <td class="status-box">   
                                 {% for item in post.contacted %}
                                     {% if item.value == 'contacted' %}
                                         <span class="status-green-table">Contacted</span>
@@ -43,9 +41,6 @@ Does'nt work. {% set active_posts = posts|filter(post => post.contacted == 'cont
                                                 <span class="status-red-table">To Do</span>
                                             {% endif %}
                                     {% endfor %}
-                                    {% else %}
-                                    <span class="status-red-table">To Do</span>
-                                {% endif %}
                             </td>
 
                             <td class="status-box">
@@ -96,6 +91,7 @@ Does'nt work. {% set active_posts = posts|filter(post => post.contacted == 'cont
                                         <span class="status-green-table">On Waitlist</span>
                                     {% endif %}
                                 {% endfor %}
+                            
                             </td>
                                         
                             <td class="status-box">
