@@ -7,9 +7,19 @@ Does'nt work. {% set active_posts = posts|filter(post => post.contacted == 'cont
 {# ISSUE == LINE 40 {% for item in post.contacted %} when first sent shows all empty and not the relevant value, when go in the form they are all checked correctly #}
 
 {% set enq = { post_type: 'show-around-enquiry', posts_per_page: -1, order: 'DESC' } %}
-{% set active_enquiries_contected = posts|filter(post => post.contacted == 'contacted' )|length %}
 {% set enquiry = mb.get_posts( enq ) %}
-    {% for school in user.school_name %}
+{% for school in user.school_name %}
+{% for post in enquiry %}
+{% for item in post.contacted %}
+    {% if item.value == 'contacted' %}
+    <span class="status-green-table">Contacted: {{ item.value|length }}</span>
+        {% elseif item.value == 'attempted' %}
+            <span class="status-amber-table">Attempts: {{ item.value|length }}</span>
+        {% elseif item.value == 'todo' %}
+            <span class="status-red-table">To Do: {{ item.value|length }}</span>
+        {% endif %}
+    {% endfor %}
+{% endfor %} 
     
         <h1>{{ school.title }} Show Around Enquiries</h1> 
             {{ active_enquiries_contected }}    
