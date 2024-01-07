@@ -11,6 +11,10 @@ Throws website error {% set active_posts = posts|filter(post => post.contacted =
 
 {% set enq = { post_type: 'show-around-enquiry', posts_per_page: -1, order: 'DESC' } %}
 {% set enquiry = mb.get_posts( enq ) %}
+{% set active_posts = enquiry|filter(post => post.contacted == 'contacted' )|length %} {{ active_posts }}
+
+{% set enq = { post_type: 'show-around-enquiry', posts_per_page: -1, order: 'DESC' } %}
+{% set enquiry = mb.get_posts( enq ) %}
 {% for school in user.school_name %}
     {% for post in enquiry %}
         {% if post.school_name.title == school.title %}
