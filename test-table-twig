@@ -1,6 +1,9 @@
 {# Plan to show how many check stats #}
 post.contacted show haw many checks for item.value == 'contacted' , item.value == 'attempted' and item.value == 'todo' 
-Does'nt work. {% set active_posts = posts|filter(post => post.contacted == 'contacted' )|length %} {{ active_posts }}
+Throws website error {% set active_posts = posts|filter(post => post.contacted == 'contacted' )|length %} {{ active_posts }}
+
+{# added 14 - 27 this shows boxes and total value of letters, needs to do count how many checks  #}
+
 {# Plan to show posts are listed in total #}
 
 {# ISSUE == When enquiry is created the checkboxes dont show by default on table just white boxes, have to go in to save post, then save as fields are default checked for them to show #}
@@ -9,125 +12,126 @@ Does'nt work. {% set active_posts = posts|filter(post => post.contacted == 'cont
 {% set enq = { post_type: 'show-around-enquiry', posts_per_page: -1, order: 'DESC' } %}
 {% set enquiry = mb.get_posts( enq ) %}
 {% for school in user.school_name %}
-{% for post in enquiry %}
-{% for item in post.contacted %}
-    {% if item.value == 'contacted' %}
-    <span class="status-green-table">Contacted: {{ item.value|length }}</span>
-        {% elseif item.value == 'attempted' %}
-            <span class="status-amber-table">Attempts: {{ item.value|length }}</span>
-        {% elseif item.value == 'todo' %}
-            <span class="status-red-table">To Do: {{ item.value|length }}</span>
-        {% endif %}
-    {% endfor %}
-{% endfor %} 
-    
-        <h1>{{ school.title }} Show Around Enquiries</h1> 
-            {{ active_enquiries_contected }}    
-                <div class="table-wrapper">
-                <table class="enquiry-table">
-                    <thead>
-                        <tr class="enquiry-table-head-tr">
-                            <td class="enquiry-table-head">Name</td>
-                            <td class="enquiry-table-head">School</td>
-                            <td class="enquiry-table-head">Visit Date</td>
-                            <td class="enquiry-table-head">Contacted</td>
-                            <td class="enquiry-table-head">Show Around</td>
-                            <td class="enquiry-table-head">Offer</td>
-                            <td class="enquiry-table-head">Welcome</td>
-                            <td class="enquiry-table-head">Waitlist</td>
-                            <td class="enquiry-table-head">Registered</td>
-                            <td class="enquiry-table-head">Action</td>
-                        </tr>
-                    </thead>
     {% for post in enquiry %}
         {% if post.school_name.title == school.title %}
-                    <tbody>
-                        <tr class="enquiry-table-content">
-                            <td class="enquiry-table-content">{{ post.parent_first_name }} {{ post.post_title }}</td>
-                            <td class="enquiry-table-content">{{ post.school_name.title }}</td>
-                            <td class="enquiry-table-content">{{ post.visit_date | date( 'd-m-Y' ) }}</td>
-                            <td class="status-box">   
-                            {% for item in post.contacted %}
-                                    {% if item.value == 'contacted' %}
-                                        <span class="status-green-table">Contacted</span>
-                                            {% elseif item.value == 'attempted' %}
-                                                <span class="status-amber-table">Attempted</span>
+            {% for item in post.contacted %}
+                {% if item.value == 'contacted' %}
+                    <span class="status-green-table">Contacted: {{ item.value|length }}</span>
+                        {% elseif item.value == 'attempted' %}
+                            <span class="status-amber-table">Attempts: {{ item.value|length }}</span>
+                        {% elseif item.value == 'todo' %}
+                            <span class="status-red-table">To Do: {{ item.value|length }}</span>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+
+            <h1>{{ school.title }} Show Around Enquiries</h1> 
+                    
+                    <div class="table-wrapper">
+                        <table class="enquiry-table">
+                            <thead>
+                                <tr class="enquiry-table-head-tr">
+                                    <td class="enquiry-table-head">Name</td>
+                                    <td class="enquiry-table-head">School</td>
+                                    <td class="enquiry-table-head">Visit Date</td>
+                                    <td class="enquiry-table-head">Contacted</td>
+                                    <td class="enquiry-table-head">Show Around</td>
+                                    <td class="enquiry-table-head">Offer</td>
+                                    <td class="enquiry-table-head">Welcome</td>
+                                    <td class="enquiry-table-head">Waitlist</td>
+                                    <td class="enquiry-table-head">Registered</td>
+                                    <td class="enquiry-table-head">Action</td>
+                                </tr>
+                            </thead>
+                            {% for post in enquiry %}
+                            {% if post.school_name.title == school.title %}
+                            <tbody>
+                                <tr class="enquiry-table-content">
+                                    <td class="enquiry-table-content">{{ post.parent_first_name }} {{ post.post_title }}</td>
+                                    <td class="enquiry-table-content">{{ post.school_name.title }}</td>
+                                    <td class="enquiry-table-content">{{ post.visit_date | date( 'd-m-Y' ) }}</td>
+                                    <td class="status-box">   
+                                    {% for item in post.contacted %}
+                                            {% if item.value == 'contacted' %}
+                                                <span class="status-green-table">Contacted</span>
+                                                    {% elseif item.value == 'attempted' %}
+                                                        <span class="status-amber-table">Attempted</span>
+                                                    {% elseif item.value == 'todo' %}
+                                                        <span class="status-red-table">To Do</span>
+                                                    {% endif %}
+                                        {% endfor %}
+                                    </td>
+
+                                    <td class="status-box">
+                                        {% for item in post.showaround_progress %}
+                                            {% if item.value == 'booked' %}
+                                                <span class="status-green-table">Booked</span>
+                                            {% elseif item.value == 'justaenquiry' %}
+                                                <span class="status-green-table">Just a Enquiry</span>
+                                            {% elseif item.value == 'noshow' %}
+                                                <span class="status-red-table">No Show</span>
+                                            {% elseif item.value == 'rebooked' %}
+                                                <span class="status-amber-table">Rebooked</span>
                                             {% elseif item.value == 'todo' %}
                                                 <span class="status-red-table">To Do</span>
                                             {% endif %}
-                                {% endfor %}
-                            </td>
+                                        {% endfor %}
+                                    </td>
+                                                
+                                    <td class="status-box">
+                                        {% for item in post.offer_accepted %}
+                                            {% if item.value == 'accepted' %}
+                                                <span class="status-green-table">Accepted</span>
+                                            {% elseif item.value == 'notaccepted' %}
+                                                <span class="status-red-table">Not Accepted</span>
+                                            {% elseif item.value == 'offered' %}
+                                                <span class="status-amber-table">Offered</span>
+                                            {% elseif item.value == 'sendoffer' %}
+                                                <span class="status-red-table">Send Offer</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
 
-                            <td class="status-box">
-                                {% for item in post.showaround_progress %}
-                                    {% if item.value == 'booked' %}
-                                        <span class="status-green-table">Booked</span>
-                                    {% elseif item.value == 'justaenquiry' %}
-                                        <span class="status-green-table">Just a Enquiry</span>
-                                    {% elseif item.value == 'noshow' %}
-                                        <span class="status-red-table">No Show</span>
-                                    {% elseif item.value == 'rebooked' %}
-                                        <span class="status-amber-table">Rebooked</span>
-                                    {% elseif item.value == 'todo' %}
-                                        <span class="status-red-table">To Do</span>
-                                    {% endif %}
-                                {% endfor %}
-                            </td>
-                                        
-                            <td class="status-box">
-                                {% for item in post.offer_accepted %}
-                                    {% if item.value == 'accepted' %}
-                                        <span class="status-green-table">Accepted</span>
-                                    {% elseif item.value == 'notaccepted' %}
-                                        <span class="status-red-table">Not Accepted</span>
-                                    {% elseif item.value == 'offered' %}
-                                        <span class="status-amber-table">Offered</span>
-                                    {% elseif item.value == 'sendoffer' %}
-                                        <span class="status-red-table">Send Offer</span>
-                                    {% endif %}
-                                {% endfor %}
-                            </td>
+                                    <td class="status-box">
+                                        {% for item in post.welcome_email_sent %}
+                                                {% if item.value == 'sent' %}
+                                                    <span class="status-green-table">Sent</span>
+                                                {% elseif item.value == 'notsent' %}
+                                                    <span class="status-red-table">Not Sent</span>
+                                                {% endif %}
+                                        {% endfor %}
+                                    </td>
 
-                            <td class="status-box">
-                                {% for item in post.welcome_email_sent %}
-                                        {% if item.value == 'sent' %}
-                                            <span class="status-green-table">Sent</span>
-                                        {% elseif item.value == 'notsent' %}
-                                            <span class="status-red-table">Not Sent</span>
-                                        {% endif %}
-                                {% endfor %}
-                            </td>
+                                    <td class="status-box">
+                                        {% for item in post.child_waitlist %}
+                                            {% if item.value == 'undergoing' %}
+                                                <span class="status-amber-table">Undergoing</span>
+                                            {% elseif item.value == 'attempted' %}
+                                                <span class="status-green-table">On Waitlist</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    
+                                    </td>
+                                                
+                                    <td class="status-box">
+                                        {% for item in post.child_registered %}
+                                            {% if item.value == 'registered' %}
+                                                <span class="status-green-table">Registered</span>
+                                            {% elseif item.value == 'notregistered' %}
+                                                <span class="status-red-table">Not Registered</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
 
-                            <td class="status-box">
-                                {% for item in post.child_waitlist %}
-                                    {% if item.value == 'undergoing' %}
-                                        <span class="status-amber-table">Undergoing</span>
-                                    {% elseif item.value == 'attempted' %}
-                                        <span class="status-green-table">On Waitlist</span>
-                                    {% endif %}
-                                {% endfor %}
-                            
-                            </td>
-                                        
-                            <td class="status-box">
-                                {% for item in post.child_registered %}
-                                    {% if item.value == 'registered' %}
-                                        <span class="status-green-table">Registered</span>
-                                    {% elseif item.value == 'notregistered' %}
-                                        <span class="status-red-table">Not Registered</span>
-                                    {% endif %}
-                                {% endfor %}
-                            </td>
-
-                            <td class="enquiry-table-content"><a href="{{ site.url }}/showaround-enquiry-form/?rwmb_frontend_field_post_id={{ post.ID }}" class="table-link">Edit</a> | <a href="{{ post.url }}" class="table-link">View</a></td>
-                        
-                        </tr>
-                    </tbody>
-                {% elseif school.title is empty %}
-                    <h3>Sorry Nothing to see</h3>
-            {% endif %}
-        {% endfor %}
-    </table> 
-    </div>
-    
+                                    <td class="enquiry-table-content"><a href="{{ site.url }}/showaround-enquiry-form/?rwmb_frontend_field_post_id={{ post.ID }}" class="table-link">Edit</a> | <a href="{{ post.url }}" class="table-link">View</a></td>
+                                
+                                </tr>
+                            </tbody>
+                            {% elseif school.title is empty %}
+                            <h3>Sorry Nothing to see</h3>
+                            {% endif %}
+                            {% endfor %} 
+                        </table> 
+                    </div>
 {% endfor %}
