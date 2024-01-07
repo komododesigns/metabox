@@ -1,3 +1,8 @@
+{# Plan to show how many check stats #}
+post.contacted show haw many checks for item.value == 'contacted' , item.value == 'attempted' and item.value == 'todo' 
+Does'nt work. {% set active_posts = posts|filter(post => post.contacted == 'contacted' )|length %} {{ active_posts }}
+{# Plan to show posts are listed in total #}
+
 
 {% set enq = { post_type: 'show-around-enquiry', posts_per_page: -1, order: 'DESC' } %}
 {% set active_posts = posts|filter(post => post.contacted == 'contacted' )|length %} {{ active_posts }}
