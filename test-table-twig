@@ -3,6 +3,8 @@ post.contacted show haw many checks for item.value == 'contacted' , item.value =
 Does'nt work. {% set active_posts = posts|filter(post => post.contacted == 'contacted' )|length %} {{ active_posts }}
 {# Plan to show posts are listed in total #}
 
+{# ISSUE == When enquiry is created the checkboxes dont show by default on table just white boxes, have to go in to save post, then save as fields are default checked for them to show #}
+{# to fix issue i tried LINE 37 {% if post.contacted == '1' %} but now all show as to do #}
 
 {% set enq = { post_type: 'show-around-enquiry', posts_per_page: -1, order: 'DESC' } %}
 {% for school in user.school_name %}
@@ -32,15 +34,19 @@ Does'nt work. {% set active_posts = posts|filter(post => post.contacted == 'cont
                             <td class="enquiry-table-content">{{ post.school_name.title }}</td>
                             <td class="enquiry-table-content">{{ post.visit_date | date( 'd-m-Y' ) }}</td>
                             <td class="status-box">   
-                                {% for item in post.contacted %}
-                                    {% if item.value == 'contacted' %}
-                                        <span class="status-green-table">Contacted</span>
-                                            {% elseif item.value == 'attempted' %}
-                                                <span class="status-amber-table">Attempted</span>
-                                            {% elseif item.value == 'todo' %}
-                                                <span class="status-red-table">To Do</span>
-                                            {% endif %}
-                                    {% endfor %}
+                                {% if post.contacted == '1' %}
+                                        {% for item in post.contacted %}
+                                            {% if item.value == 'contacted' %}
+                                                <span class="status-green-table">Contacted</span>
+                                                    {% elseif item.value == 'attempted' %}
+                                                        <span class="status-amber-table">Attempted</span>
+                                                    {% elseif item.value == 'todo' %}
+                                                        <span class="status-red-table">To Do</span>
+                                                    {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                                 <span class="status-red-table">To Do</span>
+                                        {% endif %}
                             </td>
 
                             <td class="status-box">
