@@ -1,157 +1,72 @@
-{# Plan to show how many check stats #}
-post.contacted show haw many checks for item.value == 'contacted' , item.value == 'attempted' and item.value == 'todo' 
-Throws website error {% set active_posts = posts|filter(post => post.contacted == 'contacted' )|length %} {{ active_posts }}
-
-{# added 14 - 27 this shows boxes and total value of letters, needs to do count how many checks  #}
-
-{# Plan to show posts are listed in total #}
-
-{# ISSUE == When enquiry is created the checkboxes dont show by default on table just white boxes, have to go in to save post, then save as fields are default checked for them to show #}
-{# ISSUE == LINE 40 {% for item in post.contacted %} when first sent shows all empty and not the relevant value, when go in the form they are all checked correctly #}
-
-{% set enq = { post_type: 'show-around-enquiry', posts_per_page: -1, order: 'DESC' } %}
-{% set enquiry = mb.get_posts( enq ) %}
-{% set active_posts = enquiry|filter(post => post.contacted == 'contacted' )|length %} {{ active_posts }}
-
-{% set enq = { post_type: 'show-around-enquiry', posts_per_page: -1, order: 'DESC' } %}
-{% set enquiry = mb.get_posts( enq ) %}
-{% for school in user.school_name %}
-    {% for post in enquiry %}
-        {% if post.school_name.title == school.title %}
-            {% for item in post.contacted %}
-                {% if item.value == 'contacted' %}
-                    <span class="status-green-table">Contacted: {{ item.value|length }}</span>
-                        {% elseif item.value == 'attempted' %}
-                            <span class="status-amber-table">Attempts: {{ item.value|length }}</span>
-                        {% elseif item.value == 'todo' %}
-                            <span class="status-red-table">To Do: {{ item.value|length }}</span>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-    {% endfor %}
-
-
-
-{% for post in enquiry %}
-        {% if post.school_name.title == school.title %}
-            {% for item in post.contacted %}
-                {% if item.value == 'contacted' %}
-                    <span class="status-green-table">Contacted: {{ item|length }}</span>
-                        {% elseif item.value == 'attempted' %}
-                            <span class="status-amber-table">Attempts: {{ item|length }}</span>
-                        {% elseif item.value == 'todo' %}
-                            <span class="status-red-table">To Do: {{ item|length }}</span>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-    {% endfor %}
-
-            <h1>{{ school.title }} Show Around Enquiries</h1> 
-                    
-                    <div class="table-wrapper">
-                        <table class="enquiry-table">
-                            <thead>
-                                <tr class="enquiry-table-head-tr">
-                                    <td class="enquiry-table-head">Name</td>
-                                    <td class="enquiry-table-head">School</td>
-                                    <td class="enquiry-table-head">Visit Date</td>
-                                    <td class="enquiry-table-head">Contacted</td>
-                                    <td class="enquiry-table-head">Show Around</td>
-                                    <td class="enquiry-table-head">Offer</td>
-                                    <td class="enquiry-table-head">Welcome</td>
-                                    <td class="enquiry-table-head">Waitlist</td>
-                                    <td class="enquiry-table-head">Registered</td>
-                                    <td class="enquiry-table-head">Action</td>
-                                </tr>
-                            </thead>
-                            {% for post in enquiry %}
-                            {% if post.school_name.title == school.title %}
-                            <tbody>
-                                <tr class="enquiry-table-content">
-                                    <td class="enquiry-table-content">{{ post.parent_first_name }} {{ post.post_title }}</td>
-                                    <td class="enquiry-table-content">{{ post.school_name.title }}</td>
-                                    <td class="enquiry-table-content">{{ post.visit_date | date( 'd-m-Y' ) }}</td>
-                                    <td class="status-box">   
-                                    {% for item in post.contacted %}
-                                            {% if item.value == 'contacted' %}
-                                                <span class="status-green-table">Contacted</span>
-                                                    {% elseif item.value == 'attempted' %}
-                                                        <span class="status-amber-table">Attempted</span>
-                                                    {% elseif item.value == 'todo' %}
-                                                        <span class="status-red-table">To Do</span>
-                                                    {% endif %}
-                                        {% endfor %}
-                                    </td>
-
-                                    <td class="status-box">
-                                        {% for item in post.showaround_progress %}
-                                            {% if item.value == 'booked' %}
-                                                <span class="status-green-table">Booked</span>
-                                            {% elseif item.value == 'justaenquiry' %}
-                                                <span class="status-green-table">Just a Enquiry</span>
-                                            {% elseif item.value == 'noshow' %}
-                                                <span class="status-red-table">No Show</span>
-                                            {% elseif item.value == 'rebooked' %}
-                                                <span class="status-amber-table">Rebooked</span>
-                                            {% elseif item.value == 'todo' %}
-                                                <span class="status-red-table">To Do</span>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </td>
-                                                
-                                    <td class="status-box">
-                                        {% for item in post.offer_accepted %}
-                                            {% if item.value == 'accepted' %}
-                                                <span class="status-green-table">Accepted</span>
-                                            {% elseif item.value == 'notaccepted' %}
-                                                <span class="status-red-table">Not Accepted</span>
-                                            {% elseif item.value == 'offered' %}
-                                                <span class="status-amber-table">Offered</span>
-                                            {% elseif item.value == 'sendoffer' %}
-                                                <span class="status-red-table">Send Offer</span>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </td>
-
-                                    <td class="status-box">
-                                        {% for item in post.welcome_email_sent %}
-                                                {% if item.value == 'sent' %}
-                                                    <span class="status-green-table">Sent</span>
-                                                {% elseif item.value == 'notsent' %}
-                                                    <span class="status-red-table">Not Sent</span>
-                                                {% endif %}
-                                        {% endfor %}
-                                    </td>
-
-                                    <td class="status-box">
-                                        {% for item in post.child_waitlist %}
-                                            {% if item.value == 'undergoing' %}
-                                                <span class="status-amber-table">Undergoing</span>
-                                            {% elseif item.value == 'attempted' %}
-                                                <span class="status-green-table">On Waitlist</span>
-                                            {% endif %}
-                                        {% endfor %}
-                                    
-                                    </td>
-                                                
-                                    <td class="status-box">
-                                        {% for item in post.child_registered %}
-                                            {% if item.value == 'registered' %}
-                                                <span class="status-green-table">Registered</span>
-                                            {% elseif item.value == 'notregistered' %}
-                                                <span class="status-red-table">Not Registered</span>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </td>
-
-                                    <td class="enquiry-table-content"><a href="{{ site.url }}/showaround-enquiry-form/?rwmb_frontend_field_post_id={{ post.ID }}" class="table-link">Edit</a> | <a href="{{ post.url }}" class="table-link">View</a></td>
-                                
-                                </tr>
-                            </tbody>
-                            {% elseif school.title is empty %}
-                            <h3>Sorry Nothing to see</h3>
-                            {% endif %}
-                            {% endfor %} 
-                        </table> 
+{% if mb.array_intersect( mb.get_user_by( 'id', user.ID).roles, [ 'administrator' ] )|length %}
+{% set current_day = "now"|date("d-m-Y") %} 
+{% set timeline = { post_type: 'timeline', posts_per_page: -1, order: 'DESC' } %}
+{% set timeline_posts = mb.get_posts( timeline ) %}
+<div class="block-buttons">    
+    <button class="open-button" onclick="openPostForm()">Post</button>
+        <div class="form-popup" id="post">
+        [mb_frontend_form id='timeline' submit_button='Post' redirect='/timeline']
+            <div class="close">
+                <button type="button" class="btn cancel" onclick="closePostForm()">Close</button>
+            </div>     
+        </div>
+</div>
+<div class="wrap">
+    {% for post in timeline_posts %}
+        {% if timeline_posts|length %}
+            <div class="timeline">
+                <div class="timeline-post">
+                    <div>
+                        {% for item in post.krew_timeline_image %}
+                            <img src="{{ item.full.url }}" width="{{ item.full.width }}" height="{{ item.full.height }}" alt="{{ item.full.alt }}">
+                        {% endfor %}
                     </div>
-{% endfor %}
+                    <div class="timeline-content">
+                        <h3>{{ post.post_title }}</h3>
+                        <p>{{ post.krew_timeline_description }}</p>
+                    </div>
+                    <div class="col-12 user">
+                        <div class="col-6 left">
+                            {{ post.date | date( 'd-m-Y' ) }} | {{ author.display_name }} {{ mb.get_avatar( author.ID, 48 ) }}
+                        </div>
+                        <div class="col-6 right">
+                            <div class="block-buttons">    
+                                <button class="open-button" onclick="openCommentForm()">Comment</button>
+                                    <div class="form-popup" id="comment">
+                                    [mb_frontend_form id='timeline-comment' post_id='current'] {% Not collecting current post %}
+                                        <div class="close">
+                                            <button type="button" class="btn cancel" onclick="closeCommentForm()">Close</button> 
+                                        </div>    
+                                    </div>
+                                    {% if author.ID == user.ID %}
+                                    <button class="open-button" onclick="openPostForm()">Edit</button>
+                                        <div class="form-popup" id="post">
+                                        [mb_frontend_form id='timeline' post_id='current'] {% Not collecting current post %}
+                                            <div class="close">
+                                                <button type="button" class="btn cancel" onclick="closePostForm()">Close</button>
+                                            </div>     
+                                        </div>
+                                    {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Comments</h3>
+                    </div>
+                    {% if post.krew_timeline_comment|length %}
+                        {% for clone in post.krew_timeline_comment %}
+                            <div class="detail-block progress">
+                                <div class="timeline-comments">
+                                {% for item in clone.krew_timeline_comment_image_upload %}
+                                    <img src="{{ item.full.url }}" width="{{ item.full.width }}" height="{{ item.full.height }}" alt="{{ item.full.alt }}">
+                                {% endfor %}
+                                <p>{{ clone.krew_timeline_comment_description }}</p>
+                        {% endfor %}
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
